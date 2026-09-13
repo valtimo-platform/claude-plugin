@@ -1,0 +1,34 @@
+[
+    {
+        "activityId": "StartEvent_1",
+        "activityType": "bpmn:StartEvent:start",
+        "processLinkType": "form",
+        "formDefinitionName": "claude-fixture-case-data",
+        "viewModelEnabled": false,
+        "formDisplayType": "modal",
+        "formSize": "medium",
+        "subtitles": []
+    },
+    {
+        "activityId": "askAboutCase",
+        "activityType": "bpmn:ServiceTask:start",
+        "processLinkType": "plugin",
+        "pluginConfigurationId": "4ac9a49f-4aeb-4f91-86d9-853fd95a1b33",
+        "pluginActionDefinitionKey": "ask-claude",
+        "actionProperties": {
+            "systemPrompt": "You are a case handler advising on \"{{doc:/subject}}\". Answer in at most three sentences.",
+            "prompt": "Customer {{pv:customerNumber}} asks the following. {{doc:/question}}",
+            "resultVariable": "claudeAnswer"
+        }
+    },
+    {
+        "activityId": "showAnswer",
+        "activityType": "bpmn:UserTask:create",
+        "processLinkType": "form",
+        "formDefinitionName": "claude-fixture-case-data-show-answer",
+        "viewModelEnabled": false,
+        "formDisplayType": "modal",
+        "formSize": "large",
+        "subtitles": []
+    }
+]

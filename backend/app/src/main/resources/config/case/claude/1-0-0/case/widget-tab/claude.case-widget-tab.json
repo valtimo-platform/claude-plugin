@@ -1,0 +1,58 @@
+[
+    {
+        "key": "summary",
+        "widgets": [
+            {
+                "type": "fields",
+                "key": "claude-case-data",
+                "title": "Case data",
+                "width": 2,
+                "highContrast": true,
+                "properties": {
+                    "columns": [
+                        [
+                            {
+                                "key": "subject",
+                                "title": "Subject",
+                                "value": "doc:subject",
+                                "displayProperties": {
+                                    "type": "text",
+                                    "hideWhenEmpty": true
+                                }
+                            },
+                            {
+                                "key": "question",
+                                "title": "Question",
+                                "value": "doc:question",
+                                "displayProperties": {
+                                    "type": "text",
+                                    "hideWhenEmpty": true
+                                }
+                            }
+                        ],
+                        [
+                            {
+                                "key": "urgency",
+                                "title": "Urgency (mapped)",
+                                "value": "doc:urgency",
+                                "displayProperties": {
+                                    "type": "text",
+                                    "hideWhenEmpty": true
+                                }
+                            },
+                            {
+                                "key": "answer",
+                                "title": "Answer (mapped)",
+                                "value": "doc:answer",
+                                "displayProperties": {
+                                    "type": "text",
+                                    "hideWhenEmpty": true
+                                }
+                            }
+                        ]
+                    ]
+                }
+            }
+        ]
+    }
+]

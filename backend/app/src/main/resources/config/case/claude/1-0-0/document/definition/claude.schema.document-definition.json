@@ -1,0 +1,28 @@
+{
+    "$id": "claude.schema",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Claude",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Name of this case"
+        },
+        "subject": {
+            "type": "string",
+            "description": "What the question is about; woven into the system prompt"
+        },
+        "question": {
+            "type": "string",
+            "description": "The question put to Claude"
+        },
+        "answer": {
+            "type": "string",
+            "description": "Claude's answer, written by the result mapping"
+        },
+        "urgency": {
+            "type": "string",
+            "description": "Urgency Claude assigned, written by the result mapping"
+        }
+    }
+}

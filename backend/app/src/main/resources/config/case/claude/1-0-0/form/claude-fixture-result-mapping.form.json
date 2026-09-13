@@ -1,0 +1,41 @@
+{
+    "display": "form",
+    "components": [
+        {
+            "key": "explanation",
+            "type": "content",
+            "input": false,
+            "label": "Explanation",
+            "tableView": false,
+            "html": "<h4>Claude fixture: map a JSON answer</h4><p>Exercises the result mapping. The service task asks Claude to triage the message below and reply in JSON, then routes fields out of that answer:</p><ul class=\"cds--list--unordered\"><li class=\"cds--list__item\"><code>/urgency</code> &rarr; <code>doc:/urgency</code></li><li class=\"cds--list__item\"><code>/answer</code> &rarr; <code>doc:/answer</code></li><li class=\"cds--list__item\"><code>/reason</code> &rarr; <code>pv:reason</code></li></ul><p>The two <code>doc:</code> targets show up on the case summary tab afterwards. A mapping that fails never fails the step — the reason lands in <code>claudeMappingError</code>, which the result screen also shows.</p>"
+        },
+        {
+            "key": "name",
+            "type": "textfield",
+            "input": true,
+            "label": "Case name",
+            "tableView": true,
+            "defaultValue": "Map a JSON answer"
+        },
+        {
+            "key": "question",
+            "type": "textarea",
+            "input": true,
+            "label": "Message to triage (doc:/question)",
+            "tableView": false,
+            "rows": 5,
+            "validate": {
+                "required": true
+            },
+            "defaultValue": "There has been no hot water in the building since Friday and there are two small children living on the third floor. Nobody answers the service number."
+        },
+        {
+            "key": "submit",
+            "type": "button",
+            "input": true,
+            "label": "Create case",
+            "tableView": false,
+            "disableOnInvalid": true
+        }
+    ]
+}

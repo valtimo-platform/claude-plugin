@@ -1,0 +1,64 @@
+{
+    "display": "form",
+    "components": [
+        {
+            "key": "explanation",
+            "type": "content",
+            "input": false,
+            "label": "Explanation",
+            "tableView": false,
+            "html": "<h4>Claude fixture: case data in the prompt</h4><p>Exercises the prompt placeholders. Neither the prompt nor the system prompt on the service task contains the text below — they reference it, and the plugin resolves the references before the request leaves Valtimo:</p><ul class=\"cds--list--unordered\"><li class=\"cds--list__item\"><code>{{doc:/subject}}</code> and <code>{{doc:/question}}</code> come from the case document</li><li class=\"cds--list__item\"><code>{{pv:customerNumber}}</code> comes from a process variable</li></ul>"
+        },
+        {
+            "key": "name",
+            "type": "textfield",
+            "input": true,
+            "label": "Case name",
+            "tableView": true,
+            "defaultValue": "Case data in the prompt"
+        },
+        {
+            "key": "subject",
+            "type": "textfield",
+            "input": true,
+            "label": "Subject (doc:/subject)",
+            "tableView": true,
+            "validate": {
+                "required": true
+            },
+            "defaultValue": "a permit application for a roof terrace"
+        },
+        {
+            "key": "question",
+            "type": "textarea",
+            "input": true,
+            "label": "Question (doc:/question)",
+            "tableView": false,
+            "rows": 4,
+            "validate": {
+                "required": true
+            },
+            "defaultValue": "The neighbours have objected. What are my options?"
+        },
+        {
+            "key": "pv.customerNumber",
+            "type": "textfield",
+            "input": true,
+            "label": "Customer number (pv:customerNumber)",
+            "tableView": false,
+            "persistent": false,
+            "validate": {
+                "required": true
+            },
+            "defaultValue": "10045"
+        },
+        {
+            "key": "submit",
+            "type": "button",
+            "input": true,
+            "label": "Create case",
+            "tableView": false,
+            "disableOnInvalid": true
+        }
+    ]
+}

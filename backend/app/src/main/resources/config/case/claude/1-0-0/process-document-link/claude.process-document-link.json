@@ -1,0 +1,22 @@
+[
+    {
+        "processDefinitionKey": "claude-fixture-ask",
+        "canInitializeDocument": true,
+        "startableByUser": true
+    },
+    {
+        "processDefinitionKey": "claude-fixture-case-data",
+        "canInitializeDocument": true,
+        "startableByUser": true
+    },
+    {
+        "processDefinitionKey": "claude-fixture-result-mapping",
+        "canInitializeDocument": true,
+        "startableByUser": true
+    },
+    {
+        "processDefinitionKey": "claude-fixture-document",
+        "canInitializeDocument": true,
+        "startableByUser": true
+    }
+]

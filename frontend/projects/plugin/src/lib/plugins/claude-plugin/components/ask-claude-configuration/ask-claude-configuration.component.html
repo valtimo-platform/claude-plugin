@@ -1,0 +1,76 @@
+<!--
+  ~ Copyright 2026 Ritense BV, the Netherlands.
+  ~
+  ~ Licensed under EUPL, Version 1.2 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" basis,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<p style="margin-bottom: 1.5rem">{{ 'actionDescription' | pluginTranslate: pluginId | async }}</p>
+
+<v-form
+  (valueChange)="formValueChange($event)"
+  *ngIf="{
+    disabled: disabled$ | async,
+    prefill: prefillConfiguration$ ? (prefillConfiguration$ | async) : null
+  } as obs"
+>
+  <v-input
+    name="prompt"
+    [title]="'prompt' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [defaultValue]="obs.prefill?.prompt"
+    [disabled]="obs.disabled"
+    [required]="true"
+    [tooltip]="'promptTooltip' | pluginTranslate: pluginId | async"
+    [fullWidth]="true"
+  ></v-input>
+  <v-input
+    name="systemPrompt"
+    [title]="'systemPrompt' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [defaultValue]="obs.prefill?.systemPrompt"
+    [disabled]="obs.disabled"
+    [tooltip]="'actionSystemPromptTooltip' | pluginTranslate: pluginId | async"
+    [fullWidth]="true"
+  ></v-input>
+  <v-input
+    name="documentResourceId"
+    [title]="'documentResourceId' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [defaultValue]="obs.prefill?.documentResourceId"
+    [disabled]="obs.disabled"
+    [tooltip]="'documentResourceIdTooltip' | pluginTranslate: pluginId | async"
+    placeholder="pv:resourceId"
+  ></v-input>
+  <v-input
+    name="resultVariable"
+    [title]="'resultVariable' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [defaultValue]="obs.prefill?.resultVariable"
+    [disabled]="obs.disabled"
+    [tooltip]="'resultVariableTooltip' | pluginTranslate: pluginId | async"
+    placeholder="claudeAnswer"
+  ></v-input>
+  <valtimo-carbon-multi-input
+    name="resultMappings"
+    type="keyValue"
+    [title]="'resultMappings' | pluginTranslate: pluginId | async"
+    [tooltip]="'resultMappingsTooltip' | pluginTranslate: pluginId | async"
+    [keyColumnTitle]="'resultMappingSource' | pluginTranslate: pluginId | async"
+    [valueColumnTitle]="'resultMappingTarget' | pluginTranslate: pluginId | async"
+    [addRowText]="'resultMappingAddRow' | pluginTranslate: pluginId | async"
+    [defaultValues]="(prefillMappings$ | async) ?? []"
+    [disabled]="!!obs.disabled"
+    [margin]="true"
+    [fullWidth]="true"
+  ></valtimo-carbon-multi-input>
+</v-form>

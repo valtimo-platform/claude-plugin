@@ -1,0 +1,85 @@
+{
+    "display": "form",
+    "components": [
+        {
+            "key": "pv.claudeAnswer",
+            "type": "hidden",
+            "input": true,
+            "label": "claudeAnswer",
+            "tableView": false,
+            "persistent": false
+        },
+        {
+            "key": "pv.claudeModel",
+            "type": "hidden",
+            "input": true,
+            "label": "claudeModel",
+            "tableView": false,
+            "persistent": false
+        },
+        {
+            "key": "pv.claudeStopReason",
+            "type": "hidden",
+            "input": true,
+            "label": "claudeStopReason",
+            "tableView": false,
+            "persistent": false
+        },
+        {
+            "key": "pv.claudeInputTokens",
+            "type": "hidden",
+            "input": true,
+            "label": "claudeInputTokens",
+            "tableView": false,
+            "persistent": false
+        },
+        {
+            "key": "pv.claudeOutputTokens",
+            "type": "hidden",
+            "input": true,
+            "label": "claudeOutputTokens",
+            "tableView": false,
+            "persistent": false
+        },
+        {
+            "key": "explanation",
+            "type": "content",
+            "input": false,
+            "label": "Explanation",
+            "tableView": false,
+            "html": "<h4>The answer</h4><p>What Claude replied, plus the response metadata the plugin writes alongside it.</p>"
+        },
+        {
+            "key": "answerDisplay",
+            "type": "textarea",
+            "input": true,
+            "label": "claudeAnswer",
+            "tableView": false,
+            "disabled": true,
+            "rows": 14,
+            "autoExpand": false,
+            "persistent": false,
+            "calculateValue": "var d = data || {}; var v = d['pv:claudeAnswer']; if (v === undefined && d.pv) { v = d.pv['claudeAnswer']; } value = (v === undefined || v === null) ? '(no data)' : (typeof v === 'string' ? v : JSON.stringify(v, null, 4));"
+        },
+        {
+            "key": "metadataDisplay",
+            "type": "textarea",
+            "input": true,
+            "label": "Response metadata",
+            "tableView": false,
+            "disabled": true,
+            "rows": 5,
+            "autoExpand": false,
+            "persistent": false,
+            "calculateValue": "var d = data || {}; var pv = d.pv || {}; function get(n) { var v = d['pv:' + n]; if (v === undefined) { v = pv[n]; } return (v === undefined || v === null) ? '(none)' : v; } value = 'claudeModel:        ' + get('claudeModel') + '\\nclaudeStopReason:   ' + get('claudeStopReason') + '\\nclaudeInputTokens:  ' + get('claudeInputTokens') + '\\nclaudeOutputTokens: ' + get('claudeOutputTokens');"
+        },
+        {
+            "key": "submit",
+            "type": "button",
+            "input": true,
+            "label": "Next",
+            "tableView": false,
+            "disableOnInvalid": true
+        }
+    ]
+}

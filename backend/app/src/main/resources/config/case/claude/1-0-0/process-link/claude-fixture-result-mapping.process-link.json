@@ -1,0 +1,48 @@
+[
+    {
+        "activityId": "StartEvent_1",
+        "activityType": "bpmn:StartEvent:start",
+        "processLinkType": "form",
+        "formDefinitionName": "claude-fixture-result-mapping",
+        "viewModelEnabled": false,
+        "formDisplayType": "modal",
+        "formSize": "medium",
+        "subtitles": []
+    },
+    {
+        "activityId": "askForJson",
+        "activityType": "bpmn:ServiceTask:start",
+        "processLinkType": "plugin",
+        "pluginConfigurationId": "4ac9a49f-4aeb-4f91-86d9-853fd95a1b33",
+        "pluginActionDefinitionKey": "ask-claude",
+        "actionProperties": {
+            "systemPrompt": "You triage incoming messages. Reply with JSON only, no prose and no code fence.",
+            "prompt": "Triage this message: {{doc:/question}}\n\nReply with exactly this shape:\n{\"urgency\": \"high|normal|low\", \"reason\": \"one sentence\", \"answer\": \"a two-sentence reply to the sender\"}",
+            "resultVariable": "claudeAnswer",
+            "resultMappings": [
+                {
+                    "source": "/urgency",
+                    "target": "doc:/urgency"
+                },
+                {
+                    "source": "/answer",
+                    "target": "doc:/answer"
+                },
+                {
+                    "source": "/reason",
+                    "target": "pv:reason"
+                }
+            ]
+        }
+    },
+    {
+        "activityId": "showMapping",
+        "activityType": "bpmn:UserTask:create",
+        "processLinkType": "form",
+        "formDefinitionName": "claude-fixture-result-mapping-show-mapping",
+        "viewModelEnabled": false,
+        "formDisplayType": "modal",
+        "formSize": "large",
+        "subtitles": []
+    }
+]

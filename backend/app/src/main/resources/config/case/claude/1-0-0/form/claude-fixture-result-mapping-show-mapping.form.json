@@ -1,0 +1,69 @@
+{
+    "display": "form",
+    "components": [
+        {
+            "key": "pv.claudeAnswer",
+            "type": "hidden",
+            "input": true,
+            "label": "claudeAnswer",
+            "tableView": false,
+            "persistent": false
+        },
+        {
+            "key": "pv.reason",
+            "type": "hidden",
+            "input": true,
+            "label": "reason",
+            "tableView": false,
+            "persistent": false
+        },
+        {
+            "key": "pv.claudeMappingError",
+            "type": "hidden",
+            "input": true,
+            "label": "claudeMappingError",
+            "tableView": false,
+            "persistent": false
+        },
+        {
+            "key": "explanation",
+            "type": "content",
+            "input": false,
+            "label": "Explanation",
+            "tableView": false,
+            "html": "<h4>The mapped values</h4><p>Below is the raw answer and the one value that was mapped to a process variable. The two values mapped into the case document are on the summary tab.</p>"
+        },
+        {
+            "key": "rawAnswerDisplay",
+            "type": "textarea",
+            "input": true,
+            "label": "claudeAnswer (raw)",
+            "tableView": false,
+            "disabled": true,
+            "rows": 10,
+            "autoExpand": false,
+            "persistent": false,
+            "calculateValue": "var d = data || {}; var v = d['pv:claudeAnswer']; if (v === undefined && d.pv) { v = d.pv['claudeAnswer']; } value = (v === undefined || v === null) ? '(no data)' : (typeof v === 'string' ? v : JSON.stringify(v, null, 4));"
+        },
+        {
+            "key": "mappedDisplay",
+            "type": "textarea",
+            "input": true,
+            "label": "Mapped to a process variable",
+            "tableView": false,
+            "disabled": true,
+            "rows": 4,
+            "autoExpand": false,
+            "persistent": false,
+            "calculateValue": "var d = data || {}; var pv = d.pv || {}; function get(n) { var v = d['pv:' + n]; if (v === undefined) { v = pv[n]; } return (v === undefined || v === null) ? '(none)' : v; } value = 'pv:reason           ' + get('reason') + '\\nclaudeMappingError  ' + get('claudeMappingError');"
+        },
+        {
+            "key": "submit",
+            "type": "button",
+            "input": true,
+            "label": "Next",
+            "tableView": false,
+            "disableOnInvalid": true
+        }
+    ]
+}

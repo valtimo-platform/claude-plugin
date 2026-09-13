@@ -1,0 +1,119 @@
+<!--
+  ~ Copyright 2026 Ritense BV, the Netherlands.
+  ~
+  ~ Licensed under EUPL, Version 1.2 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" basis,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!--
+  Every input is a direct child of <v-form>, never nested in a wrapper: v-form collects
+  its fields with @ContentChildren(InputComponent), which defaults to descendants: false,
+  so an input inside a <div> would silently drop out of the saved configuration.
+-->
+<v-form
+  (valueChange)="formValueChange($event)"
+  *ngIf="{
+    disabled: disabled$ | async,
+    prefill: prefillConfiguration$ ? (prefillConfiguration$ | async) : null
+  } as obs"
+>
+  <v-input
+    name="configurationTitle"
+    [title]="'configurationTitle' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [disabled]="obs.disabled"
+    [defaultValue]="obs.prefill?.configurationTitle"
+    [required]="true"
+    [tooltip]="'configurationTitleTooltip' | pluginTranslate: pluginId | async"
+    [widthPx]="350"
+    placeholder="Claude"
+  ></v-input>
+  <v-input
+    type="password"
+    name="apiKey"
+    [title]="'apiKey' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [disabled]="obs.disabled"
+    [defaultValue]="obs.prefill?.apiKey"
+    [tooltip]="'apiKeyTooltip' | pluginTranslate: pluginId | async"
+    [widthPx]="350"
+  ></v-input>
+  <v-input
+    name="baseUrl"
+    [title]="'baseUrl' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [disabled]="obs.disabled"
+    [defaultValue]="obs.prefill?.baseUrl"
+    [tooltip]="'baseUrlTooltip' | pluginTranslate: pluginId | async"
+    placeholder="https://api.anthropic.com"
+  ></v-input>
+  <v-select
+    name="model"
+    [items]="modelItems"
+    [title]="'model' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [defaultSelectionId]="obs.prefill?.model"
+    [disabled]="obs.disabled"
+    [tooltip]="'modelTooltip' | pluginTranslate: pluginId | async"
+  ></v-select>
+  <v-select
+    name="effort"
+    [items]="effortItems"
+    [title]="'effort' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [defaultSelectionId]="obs.prefill?.effort"
+    [disabled]="obs.disabled"
+    [tooltip]="'effortTooltip' | pluginTranslate: pluginId | async"
+  ></v-select>
+  <v-input
+    type="checkbox"
+    name="thinking"
+    [title]="'thinking' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [disabled]="obs.disabled"
+    [defaultValue]="obs.prefill?.thinking"
+    [tooltip]="'thinkingTooltip' | pluginTranslate: pluginId | async"
+  ></v-input>
+  <v-input
+    type="number"
+    name="maxTokens"
+    [title]="'maxTokens' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [disabled]="obs.disabled"
+    [defaultValue]="obs.prefill?.maxTokens"
+    [tooltip]="'maxTokensTooltip' | pluginTranslate: pluginId | async"
+    [min]="1"
+    [widthPx]="350"
+    placeholder="16000"
+  ></v-input>
+  <v-input
+    type="number"
+    name="timeoutSeconds"
+    [title]="'timeoutSeconds' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [disabled]="obs.disabled"
+    [defaultValue]="obs.prefill?.timeoutSeconds"
+    [tooltip]="'timeoutSecondsTooltip' | pluginTranslate: pluginId | async"
+    [min]="1"
+    [widthPx]="350"
+    placeholder="600"
+  ></v-input>
+  <v-input
+    name="systemPrompt"
+    [title]="'systemPrompt' | pluginTranslate: pluginId | async"
+    [margin]="true"
+    [disabled]="obs.disabled"
+    [defaultValue]="obs.prefill?.systemPrompt"
+    [tooltip]="'systemPromptTooltip' | pluginTranslate: pluginId | async"
+    [fullWidth]="true"
+  ></v-input>
+</v-form>

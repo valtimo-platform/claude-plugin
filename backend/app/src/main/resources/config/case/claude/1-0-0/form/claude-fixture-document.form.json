@@ -1,0 +1,77 @@
+{
+    "display": "form",
+    "components": [
+        {
+            "key": "explanation",
+            "type": "content",
+            "input": false,
+            "label": "Explanation",
+            "tableView": false,
+            "html": "<h4>Claude fixture: ask about a document</h4><p>Exercises the document attachment. The uploaded file's resource id lands in <code>pv:resourceId</code>, which the service task passes as <code>documentResourceId</code>; the plugin reads the bytes and sends them along with the question as a content block.</p><p>PDF, JPEG, PNG, GIF, WebP, and anything text-like (including JSON, XML and YAML) are accepted. Anything else is refused by name before the request is sent, so a <code>.docx</code> is a good way to see that check fire.</p>"
+        },
+        {
+            "key": "name",
+            "type": "textfield",
+            "input": true,
+            "label": "Case name",
+            "tableView": true,
+            "defaultValue": "Ask about a document"
+        },
+        {
+            "key": "pv.resourceId",
+            "type": "documenten-api-file",
+            "input": true,
+            "label": "Document to ask about",
+            "tableView": false,
+            "persistent": false,
+            "validate": {
+                "required": true
+            },
+            "customOptions": {
+                "title": "",
+                "author": "",
+                "camera": false,
+                "status": "definitief",
+                "filename": "",
+                "language": "nld",
+                "subtitle": "",
+                "hideTitle": false,
+                "description": "Document for Claude",
+                "maxFileSize": 10,
+                "documentType": "test",
+                "disableAuthor": false,
+                "disableStatus": false,
+                "documentTitle": "Document for Claude",
+                "disableFilename": false,
+                "disableLanguage": false,
+                "hideMaxFileSize": false,
+                "disableDescription": false,
+                "disableDocumentType": false,
+                "confidentialityLevel": "zaakvertrouwelijk",
+                "disableDocumentTitle": false,
+                "disableConfidentialityLevel": false
+            }
+        },
+        {
+            "key": "pv.question",
+            "type": "textarea",
+            "input": true,
+            "label": "Question about the document",
+            "tableView": false,
+            "rows": 3,
+            "persistent": false,
+            "validate": {
+                "required": true
+            },
+            "defaultValue": "What is this document about, and what does it ask of the reader?"
+        },
+        {
+            "key": "submit",
+            "type": "button",
+            "input": true,
+            "label": "Create case",
+            "tableView": false,
+            "disableOnInvalid": true
+        }
+    ]
+}

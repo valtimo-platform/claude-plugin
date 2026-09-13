@@ -1,0 +1,42 @@
+{
+    "display": "form",
+    "components": [
+        {
+            "key": "explanation",
+            "type": "content",
+            "input": false,
+            "label": "Explanation",
+            "tableView": false,
+            "html": "<h4>Claude fixture: ask a question</h4><p>The simplest path through the plugin. The question below is sent to Claude as-is, and the answer is stored in the process variable <code>claudeAnswer</code>.</p><ol class=\"cds--list--ordered\"><li class=\"cds--list__item\">Ask Claude (<code>ask-claude</code>)</li><li class=\"cds--list__item\">Show the answer and the response metadata</li></ol>"
+        },
+        {
+            "key": "name",
+            "type": "textfield",
+            "input": true,
+            "label": "Case name",
+            "tableView": true,
+            "defaultValue": "Ask a question"
+        },
+        {
+            "key": "pv.question",
+            "type": "textarea",
+            "input": true,
+            "label": "Question",
+            "tableView": false,
+            "rows": 4,
+            "persistent": false,
+            "validate": {
+                "required": true
+            },
+            "defaultValue": "Summarise the Dutch Wet open overheid in three sentences."
+        },
+        {
+            "key": "submit",
+            "type": "button",
+            "input": true,
+            "label": "Create case",
+            "tableView": false,
+            "disableOnInvalid": true
+        }
+    ]
+}
