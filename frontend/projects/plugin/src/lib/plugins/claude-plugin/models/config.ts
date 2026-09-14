@@ -54,8 +54,17 @@ interface ClaudeResultMapping {
 }
 
 interface AskClaudeConfig {
-  prompt: string;
-  systemPrompt?: string;
+  /**
+   * The prompt as its lines, joined with newlines by the backend.
+   *
+   * An array rather than a string, and not a matter of taste: Valtimo runs every *textual*
+   * action property through its value resolvers before the action runs, and reads a leading
+   * `word:` as a resolver prefix — so a prompt opening "Context: ..." would fail the step
+   * with "No resolver factory found for value prefix Context". An array is passed through
+   * untouched.
+   */
+  prompt: string[];
+  systemPrompt?: string[];
   // Valtimo resource id of a file to send along, usually `pv:resourceId`.
   documentResourceId?: string;
   resultVariable?: string;

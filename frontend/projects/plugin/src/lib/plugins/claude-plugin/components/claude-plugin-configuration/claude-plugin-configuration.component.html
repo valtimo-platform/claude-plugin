@@ -80,7 +80,7 @@
     [title]="'thinking' | pluginTranslate: pluginId | async"
     [margin]="true"
     [disabled]="obs.disabled"
-    [defaultValue]="obs.prefill?.thinking"
+    [defaultValue]="obs.prefill?.thinking ?? true"
     [tooltip]="'thinkingTooltip' | pluginTranslate: pluginId | async"
   ></v-input>
   <v-input
@@ -107,7 +107,9 @@
     [widthPx]="350"
     placeholder="600"
   ></v-input>
+  <!-- A textarea: v-input's text branch caps at [maxLength]="maxLength" (250 by default). -->
   <v-input
+    type="textarea"
     name="systemPrompt"
     [title]="'systemPrompt' | pluginTranslate: pluginId | async"
     [margin]="true"
@@ -115,5 +117,6 @@
     [defaultValue]="obs.prefill?.systemPrompt"
     [tooltip]="'systemPromptTooltip' | pluginTranslate: pluginId | async"
     [fullWidth]="true"
+    [rows]="4"
   ></v-input>
 </v-form>

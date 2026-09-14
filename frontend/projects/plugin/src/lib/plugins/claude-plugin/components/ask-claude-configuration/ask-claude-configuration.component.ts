@@ -20,10 +20,18 @@ import {MultiInputKeyValue} from "@valtimo/components";
 import {BehaviorSubject, combineLatest, filter, map, Observable, Subscription, switchMap, take} from "rxjs";
 import {AskClaudeConfig} from "../../models";
 
-/** What `v-form` emits: the multi-input contributes key/value rows, not source/target. */
-type AskClaudeFormValue = Omit<AskClaudeConfig, "resultMappings"> & {
+/**
+ * What `v-form` emits: the textareas contribute one block of text rather than lines, and
+ * the multi-input key/value rows rather than source/target.
+ */
+type AskClaudeFormValue = Omit<AskClaudeConfig, "prompt" | "systemPrompt" | "resultMappings"> & {
+  prompt?: string;
+  systemPrompt?: string;
   resultMappings?: MultiInputKeyValue[];
 };
+
+const asText = (lines?: string[]): string => (lines ?? []).join("\n");
+const asLines = (text?: string): string[] => (text ?? "").split("\n");
 
 @Component({
   standalone: false,
@@ -39,11 +47,12 @@ export class AskClaudeConfigurationComponent implements FunctionConfigurationCom
   @Output() configuration: EventEmitter<FunctionConfigurationData> = new EventEmitter<FunctionConfigurationData>();
 
   /**
-   * The saved mappings as the multi-input's key/value rows, resolved once per prefill.
-   * Deliberately not a method call in the template: that would hand the multi-input a
-   * new array on every change-detection run, and each one restarts its value stream.
+   * The saved configuration in the shape the form's own fields take, resolved once per
+   * prefill. Deliberately not method calls in the template: that would hand the
+   * multi-input a new array on every change-detection run, and each one restarts its
+   * value stream.
    */
-  readonly prefillMappings$ = new BehaviorSubject<MultiInputKeyValue[]>([]);
+  readonly prefill$ = new BehaviorSubject<AskClaudeFormValue>({resultMappings: []});
 
   private saveSubscription!: Subscription;
   private prefillSubscription!: Subscription;
@@ -61,33 +70,43 @@ export class AskClaudeConfigurationComponent implements FunctionConfigurationCom
   }
 
   formValueChange(formValue: AskClaudeFormValue): void {
-    const config = this.toConfig(formValue);
-    this.formValue$.next(config);
-    this.handleValid(config);
+    this.formValue$.next(this.toConfig(formValue));
+    this.handleValid(formValue);
   }
 
-  private handleValid(formValue: AskClaudeConfig): void {
-    const valid = !!formValue.prompt;
+  private handleValid(formValue: AskClaudeFormValue): void {
+    const valid = !!formValue.prompt?.trim();
     this.valid$.next(valid);
     this.valid.emit(valid);
   }
 
   private openPrefillSubscription(): void {
-    this.prefillSubscription = this.prefillConfiguration$
-      ?.pipe(map(prefill => prefill?.resultMappings ?? []))
-      .subscribe(mappings => {
-        this.prefillMappings$.next(mappings.map(mapping => ({key: mapping.source, value: mapping.target})));
+    this.prefillSubscription = this.prefillConfiguration$?.subscribe(prefill => {
+      this.prefill$.next({
+        prompt: asText(prefill?.prompt),
+        systemPrompt: asText(prefill?.systemPrompt),
+        documentResourceId: prefill?.documentResourceId,
+        resultVariable: prefill?.resultVariable,
+        resultMappings: (prefill?.resultMappings ?? []).map(mapping => ({
+          key: mapping.source,
+          value: mapping.target,
+        })),
       });
+    });
   }
 
   /**
-   * The multi-input speaks key/value; the plugin action speaks source/target. Rows that
-   * are only half filled in are dropped rather than saved as broken mappings.
+   * The form speaks text and key/value; the plugin action speaks lines and source/target.
+   * Mapping rows that are only half filled in are dropped rather than saved as broken
+   * mappings, and an empty system prompt is left out entirely so the action falls back to
+   * the one on the plugin configuration.
    */
   private toConfig(formValue: AskClaudeFormValue): AskClaudeConfig {
-    const {resultMappings, ...rest} = formValue;
+    const {prompt, systemPrompt, resultMappings, ...rest} = formValue;
     return {
       ...rest,
+      prompt: asLines(prompt),
+      ...(systemPrompt?.trim() ? {systemPrompt: asLines(systemPrompt)} : {}),
       resultMappings: (resultMappings ?? [])
         .filter(row => !!row.key && !!row.value)
         .map(row => ({source: row.key!, target: row.value!})),

@@ -26,7 +26,12 @@ import com.ritense.valtimoplugins.claude.plugin.ClaudePlugin
 import com.ritense.valtimoplugins.claude.service.ClaudeService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.operaton.bpm.engine.delegate.DelegateExecution
 import java.time.Duration
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -108,6 +113,38 @@ internal class ClaudePluginTest : BaseTest() {
         assertTrue(exception.message!!.contains("max"))
         requestOf(effort = ClaudeEffort.HIGH, thinking = false)
         requestOf(effort = ClaudeEffort.MAX, thinking = true)
+    }
+
+    @Test
+    fun `should join the prompt lines into one prompt`() {
+        val execution: DelegateExecution = mock()
+
+        plugin().askClaude(
+            execution = execution,
+            prompt = listOf("Context: je beoordeelt bezwaren.", "", "Beoordeel {{doc:/vraag}} op spoed."),
+            systemPrompt = listOf("Antwoord kort."),
+            documentResourceId = null,
+            resultVariable = null,
+            resultMappings = null,
+        )
+
+        val captor = argumentCaptor<ClaudeService.AskRequest>()
+        verify(claudeService).ask(eq(execution), any(), any(), captor.capture())
+        assertEquals(
+            "Context: je beoordeelt bezwaren.\n\nBeoordeel {{doc:/vraag}} op spoed.",
+            captor.firstValue.prompt,
+        )
+        assertEquals("Antwoord kort.", captor.firstValue.systemPrompt)
+    }
+
+    @Test
+    fun `should leave an unset prompt unset`() {
+        plugin().askClaude(mock(), null, null, null, null, null)
+
+        val captor = argumentCaptor<ClaudeService.AskRequest>()
+        verify(claudeService).ask(any(), any(), any(), captor.capture())
+        assertNull(captor.firstValue.prompt)
+        assertNull(captor.firstValue.systemPrompt)
     }
 
     @Test

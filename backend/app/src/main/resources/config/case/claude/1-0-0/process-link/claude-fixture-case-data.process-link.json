@@ -16,8 +16,12 @@
         "pluginConfigurationId": "4ac9a49f-4aeb-4f91-86d9-853fd95a1b33",
         "pluginActionDefinitionKey": "ask-claude",
         "actionProperties": {
-            "systemPrompt": "You are a case handler advising on \"{{doc:/subject}}\". Answer in at most three sentences.",
-            "prompt": "Customer {{pv:customerNumber}} asks the following. {{doc:/question}}",
+            "systemPrompt": [
+                "You are a case handler advising on \"{{doc:/subject}}\". Answer in at most three sentences."
+            ],
+            "prompt": [
+                "Customer {{pv:customerNumber}} asks the following. {{doc:/question}}"
+            ],
             "resultVariable": "claudeAnswer"
         }
     },
