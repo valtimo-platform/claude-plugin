@@ -20,10 +20,16 @@
   (valueChange)="formValueChange($event)"
   *ngIf="{
     disabled: disabled$ | async,
-    prefill: prefillConfiguration$ ? (prefillConfiguration$ | async) : null
+    prefill: prefill$ | async
   } as obs"
 >
+  <!--
+    A textarea, not a text input: v-input's text branch binds [maxLength]="maxLength", whose
+    default is 250 characters, and it is one line high. Neither is a prompt field. The
+    textarea branch binds no maxLength at all.
+  -->
   <v-input
+    type="textarea"
     name="prompt"
     [title]="'prompt' | pluginTranslate: pluginId | async"
     [margin]="true"
@@ -32,8 +38,10 @@
     [required]="true"
     [tooltip]="'promptTooltip' | pluginTranslate: pluginId | async"
     [fullWidth]="true"
+    [rows]="8"
   ></v-input>
   <v-input
+    type="textarea"
     name="systemPrompt"
     [title]="'systemPrompt' | pluginTranslate: pluginId | async"
     [margin]="true"
@@ -41,6 +49,7 @@
     [disabled]="obs.disabled"
     [tooltip]="'actionSystemPromptTooltip' | pluginTranslate: pluginId | async"
     [fullWidth]="true"
+    [rows]="4"
   ></v-input>
   <v-input
     name="documentResourceId"
@@ -68,7 +77,7 @@
     [keyColumnTitle]="'resultMappingSource' | pluginTranslate: pluginId | async"
     [valueColumnTitle]="'resultMappingTarget' | pluginTranslate: pluginId | async"
     [addRowText]="'resultMappingAddRow' | pluginTranslate: pluginId | async"
-    [defaultValues]="(prefillMappings$ | async) ?? []"
+    [defaultValues]="obs.prefill?.resultMappings ?? []"
     [disabled]="!!obs.disabled"
     [margin]="true"
     [fullWidth]="true"

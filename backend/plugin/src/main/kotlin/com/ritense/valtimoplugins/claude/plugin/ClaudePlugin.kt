@@ -85,8 +85,15 @@ open class ClaudePlugin(
     )
     open fun askClaude(
         execution: DelegateExecution,
-        @PluginActionProperty prompt: String?,
-        @PluginActionProperty systemPrompt: String?,
+        // Lines rather than one string, and not a matter of taste: `PluginService` runs
+        // every *textual* action property through `ValueResolverService` before this method
+        // is called, and that reads a leading `word:` as a resolver prefix. A prompt opening
+        // "Context: ..." therefore dies with "No resolver factory found for value prefix
+        // Context" before the action ever runs — and takes the other properties in the same
+        // batch down with it. A JSON array is not textual, so it arrives untouched. It also
+        // reads better in a hand-written process link, where a prompt is a list of lines.
+        @PluginActionProperty prompt: List<String>?,
+        @PluginActionProperty systemPrompt: List<String>?,
         // `Any?` rather than `String?`: a Valtimo file upload leaves a list of file
         // references in its process variable, and `ClaudeDocumentResolver` reads the id
         // out of either that or a plain id string.
@@ -100,14 +107,17 @@ open class ClaudePlugin(
             settings = settings(),
             ask =
                 ClaudeService.AskRequest(
-                    prompt = prompt,
-                    systemPrompt = systemPrompt,
+                    prompt = prompt.asText(),
+                    systemPrompt = systemPrompt.asText(),
                     documentResourceId = documentResourceId,
                     resultVariable = resultVariable,
                     resultMappings = resultMappings,
                 ),
         )
     }
+
+    /** The lines of a prompt as the single string that is sent. */
+    private fun List<String>?.asText(): String? = this?.joinToString(separator = "\n")
 
     /** How this configuration reaches the API. */
     fun connection(): ClaudeConnection =

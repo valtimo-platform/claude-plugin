@@ -16,8 +16,15 @@
         "pluginConfigurationId": "4ac9a49f-4aeb-4f91-86d9-853fd95a1b33",
         "pluginActionDefinitionKey": "ask-claude",
         "actionProperties": {
-            "systemPrompt": "You triage incoming messages. Reply with JSON only, no prose and no code fence.",
-            "prompt": "Triage this message: {{doc:/question}}\n\nReply with exactly this shape:\n{\"urgency\": \"high|normal|low\", \"reason\": \"one sentence\", \"answer\": \"a two-sentence reply to the sender\"}",
+            "systemPrompt": [
+                "You triage incoming messages. Reply with JSON only, no prose and no code fence."
+            ],
+            "prompt": [
+                "Triage this message: {{doc:/question}}",
+                "",
+                "Reply with exactly this shape:",
+                "{\"urgency\": \"high|normal|low\", \"reason\": \"one sentence\", \"answer\": \"a two-sentence reply to the sender\"}"
+            ],
             "resultVariable": "claudeAnswer",
             "resultMappings": [
                 {

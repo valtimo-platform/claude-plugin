@@ -26,6 +26,7 @@ mapping, document attachment — each startable on its own.
 
 ## Documentation
 
+- [Handleiding](documentation/handleiding.md) — Dutch, for administrators and process designers: setting it up in the admin UI, no technical background needed
 - [Plugin documentation](documentation/plugin.md) — configuration, the action, prompt placeholders, result mapping
 - [Demo application](documentation/demo-application.md) — the fixture case, and running it locally
 - [Getting started](documentation/getting-started.md) — developing on this repository

@@ -16,7 +16,9 @@
         "pluginConfigurationId": "4ac9a49f-4aeb-4f91-86d9-853fd95a1b33",
         "pluginActionDefinitionKey": "ask-claude",
         "actionProperties": {
-            "prompt": "{{pv:question}}",
+            "prompt": [
+                "{{pv:question}}"
+            ],
             "documentResourceId": "pv:resourceId",
             "resultVariable": "claudeAnswer"
         }

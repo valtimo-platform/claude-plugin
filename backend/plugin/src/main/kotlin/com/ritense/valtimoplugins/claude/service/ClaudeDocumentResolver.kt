@@ -97,12 +97,31 @@ open class ClaudeDocumentResolver(
                 }
                 resource.firstOrNull()?.let { resourceIdOf(it) }
             }
-            is Map<*, *> -> ID_KEYS.firstNotNullOfOrNull { key -> resource[key]?.let { resourceIdOf(it) } }
+            is Map<*, *> -> idIn(resource)
             else ->
                 throw IllegalArgumentException(
                     "Cannot read a resource id from a ${resource::class.simpleName}: '$resource'",
                 )
         }
+
+    /**
+     * The id inside one file reference.
+     *
+     * Both stock uploaders nest theirs one level deep — `{data: {resourceId: ...}}` — while
+     * the Documenten API uploader puts `id` at the top, so both levels are searched.
+     *
+     * A reference with no id in either place throws rather than resolving to "no document":
+     * the process asked for a file to be attached, and answering a question about a document
+     * that was never sent is worse than failing the step.
+     */
+    private fun idIn(reference: Map<*, *>): String {
+        val nested = reference[NESTED_KEY] as? Map<*, *> ?: emptyMap<Any?, Any?>()
+        return ID_KEYS.firstNotNullOfOrNull { key -> (reference[key] ?: nested[key])?.let { resourceIdOf(it) } }
+            ?: throw IllegalArgumentException(
+                "Cannot read a resource id from the file reference ${reference.keys}: expected one of " +
+                    "${ID_KEYS.joinToString()}, at the top level or under '$NESTED_KEY'",
+            )
+    }
 
     private fun readContent(resourceId: String): ByteArray =
         try {
@@ -135,5 +154,11 @@ open class ClaudeDocumentResolver(
          * uploader emits; `resourceId` is what the plain Valtimo uploader emits.
          */
         private val ID_KEYS = listOf("id", "resourceId")
+
+        /**
+         * Where the stock form.io upload services put their id: not at the top of the file
+         * reference but one level down, next to the file name and size.
+         */
+        private const val NESTED_KEY = "data"
     }
 }

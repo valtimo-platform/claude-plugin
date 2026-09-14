@@ -58,12 +58,29 @@ internal class ClaudeDocumentResolverTest : BaseTest() {
     fun `should read the id out of what a valtimo file upload leaves behind`() {
         stub("resource-id", "%PDF-1.4 content", "invoice.pdf", ClaudeDocument.PDF)
 
-        // The Documenten API uploader's shape, and the plain Valtimo uploader's.
+        // The Documenten API uploader's shape, and the plain Valtimo uploader's — which
+        // nests the id under `data`, as both stock form.io upload services do.
         val documentenApi = listOf(mapOf("filename" to "invoice.pdf", "sizeInBytes" to 12, "id" to "resource-id"))
-        val valtimo = listOf(mapOf("resourceId" to "resource-id"))
+        val valtimo =
+            listOf(
+                mapOf(
+                    "customUpload" to true,
+                    "originalName" to "invoice.pdf",
+                    "storage" to "openZaak",
+                    "data" to mapOf("name" to "invoice.pdf", "sizeInBytes" to 12, "resourceId" to "resource-id"),
+                ),
+            )
 
         assertEquals("invoice.pdf", resolver.resolve(documentenApi)[0].fileName)
         assertEquals("invoice.pdf", resolver.resolve(valtimo)[0].fileName)
+    }
+
+    @Test
+    fun `should report a file reference it cannot read an id from`() {
+        val exception =
+            assertThrows<IllegalArgumentException> { resolver.resolve(listOf(mapOf("originalName" to "a.pdf"))) }
+
+        assertTrue(exception.message!!.contains("originalName"))
     }
 
     @Test

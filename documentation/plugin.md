@@ -17,7 +17,7 @@ call raises a BPMN incident, which is visible in the task list and retryable lik
 
 ```kotlin
 dependencies {
-    implementation("com.ritense.valtimoplugins:claude-plugin:0.0.1")
+    implementation("com.ritense.valtimoplugins:claude-plugin:0.1.0")
 }
 ```
 
@@ -29,7 +29,7 @@ This pulls in `com.anthropic:anthropic-java` transitively. Every other dependenc
 ```json
 {
   "dependencies": {
-    "@valtimo-plugins/claude-plugin": "0.0.1"
+    "@valtimo-plugins/claude-plugin": "0.1.0"
   }
 }
 ```
@@ -84,13 +84,36 @@ application reads its key from `ANTHROPIC_API_KEY`.
 
 A service task (`bpmn:ServiceTask:start`).
 
-| Parameter            | Type   | Required | Description                                                                                     |
-|----------------------|--------|----------|-------------------------------------------------------------------------------------------------|
-| `prompt`             | string | Yes      | The question. Supports `{{pv:variable}}` and `{{doc:/path}}` placeholders.                        |
-| `systemPrompt`       | string | No       | Overrides the configuration's system prompt for this action. Same placeholders.                   |
-| `documentResourceId` | string | No       | Resolver expression for a file to send along, usually `pv:resourceId`.                            |
-| `resultVariable`     | string | No       | Name the answer is stored under. Defaults to `claudeAnswer`.                                      |
-| `resultMappings`     | list   | No       | `source` (JSON pointer into the answer) → `target` (`pv:name` or `doc:/path`).                     |
+| Parameter            | Type            | Required | Description                                                                            |
+|----------------------|-----------------|----------|-----------------------------------------------------------------------------------------|
+| `prompt`             | list of strings | Yes      | The question, as its lines. Supports `{{pv:variable}}` and `{{doc:/path}}` placeholders.  |
+| `systemPrompt`       | list of strings | No       | Overrides the configuration's system prompt for this action. Same placeholders.           |
+| `documentResourceId` | string          | No       | Resolver expression for a file to send along, usually `pv:resourceId`.                    |
+| `resultVariable`     | string          | No       | Name the answer is stored under. Defaults to `claudeAnswer`.                              |
+| `resultMappings`     | list            | No       | `source` (JSON pointer into the answer) → `target` (`pv:name` or `doc:/path`).             |
+
+#### Why the prompt is a list of lines
+
+The configurator shows one text box; what is *stored* is an array, joined with newlines
+before the question is sent:
+
+```json
+"actionProperties": {
+    "prompt": [
+        "Context: you triage incoming messages.",
+        "",
+        "Assess {{doc:/question}} for urgency."
+    ],
+    "resultVariable": "claudeAnswer"
+}
+```
+
+That is not cosmetic. Valtimo runs every **textual** action property through its value
+resolvers before an action is invoked, and reads a leading `word:` as a resolver prefix — so
+a prompt stored as the string `"Context: ..."` fails the step with `No resolver factory found
+for value prefix Context`, and takes the other properties in the same batch with it. A JSON
+array is not textual, so it is handed to the action untouched. It also spares a hand-written
+process link a wall of `\n` escapes.
 
 #### Prompt placeholders
 
