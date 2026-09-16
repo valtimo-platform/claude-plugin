@@ -32,6 +32,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.operaton.bpm.engine.delegate.DelegateExecution
+import org.operaton.bpm.engine.delegate.DelegateTask
 import java.time.Duration
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -148,9 +149,45 @@ internal class ClaudePluginTest : BaseTest() {
     }
 
     @Test
+    fun `should read an injected execution as no document`() {
+        // `PluginService.resolveMethodArguments` fills an action property it has no value
+        // for with the execution itself when the declared type accepts it, and this one is
+        // `Any?`. Without the guard a service task with no document attached — the ordinary
+        // case — fails with "Cannot read a resource id from a ExecutionEntity".
+        val execution: DelegateExecution = mock()
+
+        plugin().askClaude(execution, null, null, execution, null, null)
+
+        assertNull(captured().documentResourceId)
+    }
+
+    @Test
+    fun `should read an injected task as no document`() {
+        plugin().askClaude(mock(), null, null, mock<DelegateTask>(), null, null)
+
+        assertNull(captured().documentResourceId)
+    }
+
+    @Test
+    fun `should pass a real resource id through untouched`() {
+        val upload = listOf(mapOf("id" to "resource-1"))
+
+        plugin().askClaude(mock(), null, null, upload, null, null)
+
+        assertEquals(upload, captured().documentResourceId)
+    }
+
+    @Test
     fun `should never print the api key`() {
         assertTrue(plugin().connection().toString().contains("apiKey=***"))
         assertTrue(!plugin().connection().toString().contains("sk-test"))
+    }
+
+    /** The single request the plugin handed to [ClaudeService]. */
+    private fun captured(): ClaudeService.AskRequest {
+        val captor = argumentCaptor<ClaudeService.AskRequest>()
+        verify(claudeService).ask(any(), any(), any(), captor.capture())
+        return captor.firstValue
     }
 
     private fun requestOf(

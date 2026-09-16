@@ -17,7 +17,7 @@ call raises a BPMN incident, which is visible in the task list and retryable lik
 
 ```kotlin
 dependencies {
-    implementation("com.ritense.valtimoplugins:claude-plugin:0.1.0")
+    implementation("com.ritense.valtimoplugins:claude-plugin:0.1.1")
 }
 ```
 
@@ -29,7 +29,7 @@ This pulls in `com.anthropic:anthropic-java` transitively. Every other dependenc
 ```json
 {
   "dependencies": {
-    "@valtimo-plugins/claude-plugin": "0.1.0"
+    "@valtimo-plugins/claude-plugin": "0.1.1"
   }
 }
 ```

@@ -27,6 +27,7 @@ import com.ritense.valtimoplugins.claude.domain.ClaudeResultMapping
 import com.ritense.valtimoplugins.claude.domain.ClaudeSettings
 import com.ritense.valtimoplugins.claude.service.ClaudeService
 import org.operaton.bpm.engine.delegate.DelegateExecution
+import org.operaton.bpm.engine.delegate.DelegateTask
 import java.time.Duration
 
 /**
@@ -109,7 +110,7 @@ open class ClaudePlugin(
                 ClaudeService.AskRequest(
                     prompt = prompt.asText(),
                     systemPrompt = systemPrompt.asText(),
-                    documentResourceId = documentResourceId,
+                    documentResourceId = documentResourceId.orNoneWhenInjected(),
                     resultVariable = resultVariable,
                     resultMappings = resultMappings,
                 ),
@@ -118,6 +119,26 @@ open class ClaudePlugin(
 
     /** The lines of a prompt as the single string that is sent. */
     private fun List<String>?.asText(): String? = this?.joinToString(separator = "\n")
+
+    /**
+     * Null unless this really is a resource id.
+     *
+     * `PluginService.resolveMethodArguments` fills an action-property parameter it has no
+     * value for with the execution, if `param.type.isInstance(execution)` — and the declared
+     * type here is `Any`, which every object is an instance of. So a service task that
+     * attaches no document does not get `null`; it gets the `ExecutionEntity`, and
+     * `ClaudeDocumentResolver` then fails the action with "Cannot read a resource id from a
+     * ExecutionEntity" for a property nobody configured.
+     *
+     * The alternative is a narrower declared type, which costs the file-upload case the
+     * comment above this parameter exists for. One guard at the boundary is cheaper.
+     *
+     * `DelegateTask` as well as `DelegateExecution`: `PluginService` has a second copy of
+     * that fallback for task-scoped actions, which injects the task instead. This action is
+     * `SERVICE_TASK_START` only and so never reaches it — but the guard would stop covering
+     * the moment [PluginAction.activityTypes] grows a user-task type, and stop silently.
+     */
+    private fun Any?.orNoneWhenInjected(): Any? = this?.takeUnless { it is DelegateExecution || it is DelegateTask }
 
     /** How this configuration reaches the API. */
     fun connection(): ClaudeConnection =

@@ -2,6 +2,19 @@
 
 Overzicht van wijzigingen per versie van de Claude plugin.
 
+## 0.1.1
+
+- **Een vraag zonder document liep altijd stuk.** Een service task met de actie **Claude
+  vragen** waar geen document bij zat — verreweg het gewone geval — faalde met
+  `Cannot read a resource id from a ExecutionEntity`. Valtimo vult een actie-eigenschap
+  waarvoor het geen waarde heeft namelijk met de procesuitvoering zelf zodra het type dat
+  toelaat, en het type van het documentveld is `Any`, wat alles toelaat. De plugin herkent dat
+  nu en leest het als "geen document", zoals bedoeld.
+- **Het gepubliceerde artefact was voor Maven niet op te halen.** De Spring Boot Gradle-plugin
+  zet de jar onder de classifier `plain`, terwijl de gepubliceerde POM naar de jar zonder
+  classifier verwijst. Voor Gradle ging dat goed — die leest de module-metadata — maar een
+  Maven-project dat `com.ritense.valtimoplugins:claude-plugin` opnam, kreeg een 404 op de jar.
+
 ## 0.1.0
 
 **Let op:** de vraag en de systeemprompt van de actie worden nu opgeslagen als een lijst
