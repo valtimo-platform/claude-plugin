@@ -40,7 +40,7 @@ import org.operaton.bpm.engine.delegate.DelegateExecution
  */
 open class ClaudeService(
     private val claudeClient: ClaudeClient,
-    private val promptTemplateResolver: PromptTemplateResolver,
+    private val promptTemplateResolver: ClaudePromptTemplateResolver,
     private val documentResolver: ClaudeDocumentResolver,
     private val resultMapper: ClaudeResultMapper,
     private val valueResolverService: ValueResolverService,

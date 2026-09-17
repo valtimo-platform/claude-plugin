@@ -27,9 +27,9 @@ import com.ritense.valtimoplugins.claude.domain.ClaudeRole
 import com.ritense.valtimoplugins.claude.domain.ClaudeSettings
 import com.ritense.valtimoplugins.claude.service.ClaudeAnswerVariables
 import com.ritense.valtimoplugins.claude.service.ClaudeDocumentResolver
+import com.ritense.valtimoplugins.claude.service.ClaudePromptTemplateResolver
 import com.ritense.valtimoplugins.claude.service.ClaudeResultMapper
 import com.ritense.valtimoplugins.claude.service.ClaudeService
-import com.ritense.valtimoplugins.claude.service.PromptTemplateResolver
 import com.ritense.valueresolver.ValueResolverService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -48,7 +48,7 @@ import kotlin.test.assertTrue
 
 internal class ClaudeServiceTest : BaseTest() {
     private val claudeClient: ClaudeClient = mock()
-    private val promptTemplateResolver: PromptTemplateResolver = mock()
+    private val promptTemplateResolver: ClaudePromptTemplateResolver = mock()
     private val documentResolver: ClaudeDocumentResolver = mock()
     private val valueResolverService: ValueResolverService = mock()
     private val execution: DelegateExecution = mock()

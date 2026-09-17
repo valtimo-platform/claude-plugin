@@ -17,7 +17,7 @@
 package com.ritense.valtimoplugins.claude
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.ritense.valtimoplugins.claude.service.PromptTemplateResolver
+import com.ritense.valtimoplugins.claude.service.ClaudePromptTemplateResolver
 import com.ritense.valueresolver.ValueResolverService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -31,10 +31,10 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-internal class PromptTemplateResolverTest : BaseTest() {
+internal class ClaudePromptTemplateResolverTest : BaseTest() {
     private val valueResolverService: ValueResolverService = mock()
     private val execution: DelegateExecution = mock()
-    private val resolver = PromptTemplateResolver(valueResolverService, ObjectMapper())
+    private val resolver = ClaudePromptTemplateResolver(valueResolverService, ObjectMapper())
 
     @BeforeEach
     fun setUp() {

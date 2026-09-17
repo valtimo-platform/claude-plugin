@@ -2,6 +2,12 @@
 
 Overzicht van wijzigingen per versie van de Claude plugin.
 
+## 0.1.2
+
+- **De applicatie startte niet op als er al iets anders met dezelfde naam in de applicatie
+  zat.** Eén onderdeel van de plugin had een te algemene naam en botste daarmee. Alle
+  onderdelen heten nu naar de plugin.
+
 ## 0.1.1
 
 - **Een vraag zonder document liep altijd stuk.** Een service task met de actie **Claude
