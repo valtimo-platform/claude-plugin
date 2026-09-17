@@ -23,9 +23,9 @@ import com.ritense.valtimoplugins.claude.client.ClaudeClient
 import com.ritense.valtimoplugins.claude.client.ClaudeClientProvider
 import com.ritense.valtimoplugins.claude.plugin.ClaudePluginFactory
 import com.ritense.valtimoplugins.claude.service.ClaudeDocumentResolver
+import com.ritense.valtimoplugins.claude.service.ClaudePromptTemplateResolver
 import com.ritense.valtimoplugins.claude.service.ClaudeResultMapper
 import com.ritense.valtimoplugins.claude.service.ClaudeService
-import com.ritense.valtimoplugins.claude.service.PromptTemplateResolver
 import com.ritense.valueresolver.ValueResolverService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.AutoConfiguration
@@ -33,6 +33,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.util.unit.DataSize
 
+/**
+ * Every bean here is named after the plugin, and deliberately so. A bean name is the method
+ * name, and an application that already has a bean under that name silently *wins*: Spring
+ * skips the auto-configuration's `@Bean` method instead of registering it, because Valtimo
+ * applications run with `spring.main.allow-bean-definition-overriding: true` — with
+ * overriding off the same clash is an error at startup, with it on the bean simply is not
+ * there, and the first bean that asks for it fails with "required a bean of type ... that
+ * could not be found". A name no other module would pick keeps this plugin out of that.
+ */
 @AutoConfiguration
 class ClaudeAutoConfiguration {
     @Bean
@@ -44,11 +53,11 @@ class ClaudeAutoConfiguration {
     fun claudeClient(claudeClientProvider: ClaudeClientProvider): ClaudeClient = ClaudeClient(claudeClientProvider)
 
     @Bean
-    @ConditionalOnMissingBean(PromptTemplateResolver::class)
-    fun promptTemplateResolver(
+    @ConditionalOnMissingBean(ClaudePromptTemplateResolver::class)
+    fun claudePromptTemplateResolver(
         valueResolverService: ValueResolverService,
         objectMapper: ObjectMapper,
-    ): PromptTemplateResolver = PromptTemplateResolver(valueResolverService, objectMapper)
+    ): ClaudePromptTemplateResolver = ClaudePromptTemplateResolver(valueResolverService, objectMapper)
 
     @Bean
     @ConditionalOnMissingBean(ClaudeDocumentResolver::class)
@@ -67,14 +76,14 @@ class ClaudeAutoConfiguration {
     @ConditionalOnMissingBean(ClaudeService::class)
     fun claudeService(
         claudeClient: ClaudeClient,
-        promptTemplateResolver: PromptTemplateResolver,
+        claudePromptTemplateResolver: ClaudePromptTemplateResolver,
         claudeDocumentResolver: ClaudeDocumentResolver,
         claudeResultMapper: ClaudeResultMapper,
         valueResolverService: ValueResolverService,
     ): ClaudeService =
         ClaudeService(
             claudeClient,
-            promptTemplateResolver,
+            claudePromptTemplateResolver,
             claudeDocumentResolver,
             claudeResultMapper,
             valueResolverService,

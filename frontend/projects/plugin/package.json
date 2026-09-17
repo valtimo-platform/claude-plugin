@@ -1,7 +1,7 @@
 {
   "name": "@valtimo-plugins/claude-plugin",
   "license": "EUPL-1.2",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "scripts": {
     "build": "ng build @valtimo-plugins/claude-plugin",
     "watch": "ng build @valtimo-plugins/claude-plugin --watch"

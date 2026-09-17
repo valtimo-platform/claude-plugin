@@ -40,7 +40,7 @@ import org.operaton.bpm.engine.delegate.DelegateExecution
  * property" on plugin *configuration* fields, and reusing it on action fields would
  * give the same syntax two meanings in one plugin.
  */
-open class PromptTemplateResolver(
+open class ClaudePromptTemplateResolver(
     private val valueResolverService: ValueResolverService,
     private val objectMapper: ObjectMapper,
 ) {
