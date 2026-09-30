@@ -2,6 +2,10 @@
 
 Overzicht van wijzigingen per versie van de Claude plugin.
 
+## 0.1.3
+
+Ondersteuning voor Valtimo 13.48.0.
+
 ## 0.1.2
 
 - **De applicatie startte niet op als er al iets anders met dezelfde naam in de applicatie
